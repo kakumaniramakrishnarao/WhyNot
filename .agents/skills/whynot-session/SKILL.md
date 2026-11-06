@@ -13,7 +13,8 @@ description: Use at the start and end of EVERY WhyNot build session (any prompt 
 4. Read the hand-off notes of the previous 2 sessions in `docs/PROGRESS.md`.
 5. Read `docs/QUESTIONS.md`; if an open question affects your card, stop and report.
 6. `git checkout main && git pull`, then `git checkout -b session/<id>-<slug>`.
-7. Run `pnpm verify` once on the untouched branch. If it is already red, stop and report — do not fix unrelated breakage silently.
+7. **Skills check:** compare the skills your session card lists under "Skills" with the skills available to you. If any listed skill is missing (e.g. `playwright`, `openai-docs`, `ui-ux-pro-max`), STOP before coding and tell the human exactly which are missing and the install command from `docs/09-codex-workflow.md` (`$skill-installer <name>`, then restart Codex). Do not continue without them. Exception: Session 4.1 installs `ui-ux-pro-max` itself.
+8. Run `pnpm verify` once on the untouched branch. If it is already red, stop and report — do not fix unrelated breakage silently.
 
 ## 2. Plan
 

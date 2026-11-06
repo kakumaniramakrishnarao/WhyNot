@@ -84,6 +84,8 @@ Project skills live in `.agents/skills/`. Use them:
 - `$whynot-narration` — `packages/narrator`, `tools/eval-narration`.
 - `$whynot-review` — reviewing a finished session in a fresh task.
 
+**Before starting any session, check that every skill the session card lists is available. If one is missing, stop and tell the human which one and how to install it (`docs/09-codex-workflow.md`).**
+
 External skills (install per `docs/09-codex-workflow.md`): `ui-ux-pro-max`, `playwright`, `playwright-interactive`, `screenshot`, `security-best-practices`, `security-threat-model`, `openai-docs`, `gh-fix-ci`, `gh-address-comments`, `yeet`.
 
 ## Things that are deliberately out of scope
