@@ -46,6 +46,8 @@ Generators (`fixtures/src/generate.ts`) produce random but valid snapshots (1–
 | P10 | **Privacy:** patient projection contains no staff-only rule IDs, no `reason` params, no other patient IDs/names, no raw booking IDs |
 | P11 | **Admin fix validity:** relaxing exactly the admin-fix facts makes the original request bookable; `adminFix` contains only admin-relaxable facts |
 | P12 | **Fact integrity:** every `primary` id exists in `facts`; every fact's `ruleId` is in the catalog |
+| P13 | **Range coverage:** `explainRange` segments cover every candidate slot exactly once, in time order; each slot's primary facts ⊆ its segment's facts; `fully_blocked` ⇔ no slot is bookable |
+| P14 | **Range common cause & next available:** every common-cause pair is in every slot's signature, and when non-empty `commonCause` alone blocks every slot (sufficiency); `nextAvailable` (if any) re-evaluates bookable and lies after the range |
 
 Run counts: 5,000 cases per property in CI (`FC_NUM_RUNS`), 500 locally by default for speed.
 
@@ -79,7 +81,7 @@ Rules:
 
 - Scenarios are written from the **spec (doc 02)**, before the code that satisfies them.
 - An expectation may only be changed together with a decision-log entry explaining why the original expectation was wrong. Never "update the golden file to make it pass".
-- Required set by v1.0: H1–H8 + at least 16 edge scenarios (DST change day, request at closing boundary, appointment spanning a break edge, back-to-back exact adjacency, zero buffers, all practitioners unqualified, no rooms with capability, patient limit + notice together, preference + leave, equipment-only conflict, maintenance spanning midnight, max-advance boundary, min-notice exact boundary, daily cap exactly reached, cancelled booking ignored, two equal-cost alternatives tie-break).
+- Required set by v1.0: H1–H11 + at least 16 edge scenarios (DST change day, request at closing boundary, appointment spanning a break edge, back-to-back exact adjacency, zero buffers, all practitioners unqualified, no rooms with capability, patient limit + notice together, preference + leave, equipment-only conflict, maintenance spanning midnight, max-advance boundary, min-notice exact boundary, daily cap exactly reached, cancelled booking ignored, two equal-cost alternatives tie-break).
 
 ## Helpfulness review (human)
 

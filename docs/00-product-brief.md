@@ -14,6 +14,20 @@ Booking systems answer a failed request with "unavailable". That hides three dif
 
 Patients guess, give up, or contact support. Staff dig through settings to reconstruct why. Nobody learns which rules quietly cost bookings every week.
 
+## Where WhyNot lands (and where it doesn't)
+
+Most booking apps simply **hide** unavailable times. When a patient has plenty of open slots that suit them, that works fine — they pick one, and **WhyNot adds little there. We don't claim otherwise.**
+
+Hiding fails in three moments, and those are WhyNot's three surfaces:
+
+| Moment | What goes wrong with hidden slots | What WhyNot does |
+| --- | --- | --- |
+| **The patient is stuck** — a whole day, a whole week, or their preferred practitioner shows *nothing*, or the time they need is missing | They can't tell "fully booked" from "on leave", "needs a referral", "returning patients only" or "2 hours' notice". Many causes are *rules*, which a hidden slot can never communicate. They give up or phone the clinic | **"Why is this empty?"** for a day or practitioner (the most common real moment), plus "why not this time?" for a specific slot, and always "here's what you *can* book" |
+| **The front desk gets the call** | Staff reconstruct the cause from calendars and settings | One click: the full staff-level reason and the minimal policy fix |
+| **The manager never finds out** | A hidden slot leaves no trace; the clinic never learns which rules cost it bookings | Every "no" is recorded with its reason → insights ("the 15-min buffer hid 41 requested times") + a what-if simulator |
+
+In one line: **normal apps hide the "no"; WhyNot explains it when the patient is stuck, answers it for staff, and counts it for the business.** The third surface is the strongest value; the first is the most visible in the demo.
+
 ## Users
 
 | User | What they need | WhyNot surface |
@@ -50,6 +64,7 @@ Patients guess, give up, or contact support. Staff dig through settings to recon
 - Resources: practitioners (skills, hours, breaks, leave), rooms (capabilities, maintenance), equipment (types, maintenance).
 - Rule families: availability, occupancy, buffers/turnover, capability, timing policy (notice, advance window), daily caps, patient eligibility, patient's stated preferences.
 - Outputs: bookable assignment *or* minimal explanation + up to 3 diverse alternatives + staff-only "minimal policy fix".
+- **Range explanations:** "Why is this day / this practitioner's week empty?" — a headline common cause (if one exists), time segments with their reasons, and the next available slot.
 - Demo booking flow (books into the demo database), staff insights, policy simulator, engine inspector.
 - Template wording + optional OpenAI wording with verification.
 - Static in-browser demo (GitHub Pages) + full-stack local mode (Docker Compose).

@@ -80,11 +80,11 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 **Skills:** `whynot-session`, `screenshot`, `playwright`, `ui-ux-pro-max`.
 
 **Build:**
-- `README.md` rewrite: one-line pitch, live demo link, GIF of the H1 flow (≤ 15 s), 3 screenshots (patient panel, staff insights, inspector), "How it works" (diagram + 5 bullets), what's proven (properties) vs judged (helpfulness), tech stack, run locally, honest limitations, license.
+- `README.md` rewrite: one-line pitch, live demo link, GIF of the H10 "why is this empty?" → next available flow and the H1 blocked-slot flow (≤ 15 s each); a short "Where WhyNot lands" section (from doc 00), 3 screenshots (patient panel, staff insights, inspector), "How it works" (diagram + 5 bullets), what's proven (properties) vs judged (helpfulness), tech stack, run locally, honest limitations, license.
 - `docs/writeup.md`: technical article "Explaining a 'no': minimal explanations for booking rules" — the hitting-set idea, weights, alternatives cost model, privacy projection, verified AI wording, testing approach, what I'd do next.
 - `docs/video-script.md`: 2-minute demo script (shot list + narration).
 - Architecture diagram as Mermaid in README (and exported PNG in `docs/design/`).
-- Final helpfulness review `docs/reviews/helpfulness-<date>.md` (you score H1–H8).
+- Final helpfulness review `docs/reviews/helpfulness-<date>.md` (you score H1–H11).
 - Tag `v1.0.0` after merge; GitHub release notes.
 
 **Done when:** release checklist in `docs/07-roadmap.md` fully ticked; `v1.0.0` tagged.

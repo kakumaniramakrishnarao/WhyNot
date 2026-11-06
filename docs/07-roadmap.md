@@ -10,14 +10,14 @@ Phases are ordered so the **riskiest thing (the engine's correctness and speed) 
 | --- | --- | --- | --- |
 | **0 — Foundation** | Monorepo, tooling, CI, guard rails | 0.1, 0.2 | `pnpm verify` green locally and in CI; import-boundary lint works; skills installed |
 | **1 — Engine core (proof)** | Correct, fast feasibility + minimal explanations | 1.1 – 1.6 | P1–P5, P8, P9, P12 pass at 5,000 runs; H1–H8 explanation sets pass; S-dataset bench within targets |
-| **2 — Alternatives, admin fix, wording** | Complete engine output + template wording | 2.1 – 2.4 | P6, P7, P10, P11 pass; H1–H8 fully pass incl. alternatives and patient text; every rule has templates |
+| **2 — Alternatives, admin fix, wording, range** | Complete engine output + template wording + "why is this empty?" | 2.1 – 2.5 | P6, P7, P10, P11, P13, P14 pass; H9–H11 range goldens pass; H1–H8 fully pass incl. alternatives and patient text; every rule has templates |
 | **3 — API & data** | Persistence, seed clinic, endpoints, safe booking | 3.1 – 3.4 | Integration suite green on PGlite; concurrency test passes; seed reproduces hero scenarios through the API |
 | **4 — Patient experience** | The demo: booking page + "Why not?" panel + static mode | 4.1 – 4.5 | E2E for H1, H2, H3, H7 pass in full and static mode; axe clean; static build deploys |
 | **5 — AI narration** | Verified OpenAI wording | 5.1 – 5.3 | Verifier adversarial suite passes; narration eval ≥ 90% first-pass, 0 privacy failures; model choice recorded |
 | **6 — Staff tools** | Staff view, insights, simulator, inspector | 6.1 – 6.4 | Dashboard populated from seed; simulator estimates match a hand-checked example; inspector shows H1 matrix |
 | **7 — Ship** | Hardening, deploy, portfolio package | 7.1 – 7.3 | Release checklist (below) 100% ticked |
 
-**Total: 31 sessions.**
+**Total: 32 sessions.**
 
 ## Session index
 
@@ -34,13 +34,14 @@ Phases are ordered so the **riskiest thing (the engine's correctness and speed) 
 | 2.1 | Alternatives search + cost model + diversity | 1.6 |
 | 2.2 | Admin fix + presentation groups + `evaluate()` final shape | 2.1 |
 | 2.3 | Audience projection (privacy) + P10 | 2.2 |
-| 2.4 | Template narrator (all rules, both audiences) + edge goldens → **Phase 2 gate** | 2.3 |
-| 3.1 | DB schema, migrations, PGlite test harness, Docker Compose | 2.4 |
+| 2.4 | Template narrator (all rules, both audiences) + edge goldens | 2.3 |
+| 2.5 | Range explanation ("Why is this empty?") + H9–H11 → **Phase 2 gate** | 2.4 |
+| 3.1 | DB schema, migrations, PGlite test harness, Docker Compose | 2.5 |
 | 3.2 | Seed script: Riverside clinic + demo clock + historical evaluations | 3.1 |
-| 3.3 | API skeleton + snapshot loader + `/clinic`, `/availability`, `/explain` | 3.2 |
+| 3.3 | API skeleton + snapshot loader + `/clinic`, `/availability`, `/explain`, `/explain-range` | 3.2 |
 | 3.4 | Bookings (serializable + exclusion constraints), cancel, policies, demo reset → **Phase 3 gate** | 3.3 |
 | 4.1 | Design system with UI UX Pro Max + web scaffold + API client + role switcher | 3.4 |
-| 4.2 | Booking page: service/practitioner/date pickers + availability grid | 4.1 |
+| 4.2 | Booking page: pickers + availability grid + "Why is this empty?" state | 4.1 |
 | 4.3 | "Why not?" panel + alternatives + one-click book + conflict handling | 4.2 |
 | 4.4 | Static demo mode (engine in browser) + GitHub Pages workflow | 4.3 |
 | 4.5 | E2E + accessibility pass + responsive polish → **Phase 4 gate** | 4.4 |
@@ -61,7 +62,7 @@ Phases 1 and 2 are split finely on purpose: the engine is where mistakes are mos
 
 - [ ] All phase gates passed and recorded in `docs/PROGRESS.md`
 - [ ] `pnpm verify` + CI e2e green on `main`
-- [ ] H1–H8 + ≥ 16 edge goldens pass; helpfulness review scores ≥ 4
+- [ ] H1–H11 + ≥ 16 edge goldens pass; helpfulness review scores ≥ 4
 - [ ] Narration eval report committed; 0 privacy failures
 - [ ] Bench within targets; baseline committed
 - [ ] Security review (skill `security-best-practices`) findings resolved or documented

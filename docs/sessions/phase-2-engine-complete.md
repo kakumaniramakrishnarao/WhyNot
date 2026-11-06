@@ -1,6 +1,6 @@
 # Phase 2 — Alternatives, admin fix, privacy, wording
 
-Exit gate (checked in Session 2.4): P6, P7, P10, P11 pass at 5,000 runs (plus all Phase 1 properties still pass); H1–H8 goldens fully pass including alternatives, admin fix and patient text; every catalog rule has both templates; ≥ 16 edge goldens pass; bench S `evaluate` with alternatives p95 ≤ 400 ms.
+Exit gate (checked in Session 2.5): P6, P7, P10, P11, P13, P14 pass; H9–H11 range goldens pass; `explainRange` bench within target; and P6, P7, P10, P11 pass at 5,000 runs (plus all Phase 1 properties still pass); H1–H8 goldens fully pass including alternatives, admin fix and patient text; every catalog rule has both templates; ≥ 16 edge goldens pass; bench S `evaluate` with alternatives p95 ≤ 400 ms.
 
 Reasoning effort: **high**.
 
@@ -120,7 +120,7 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 
 ---
 
-## Session 2.4 — Template narrator + edge goldens → Phase 2 gate
+## Session 2.4 — Template narrator + edge goldens
 
 **Goal:** every evaluation can be rendered as clear, kind patient text and precise staff text without any AI; the edge-case corpus is complete.
 
@@ -137,24 +137,67 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 
 **Tests:** catalog-coverage test (every rule has both templates); snapshot tests of patient + staff text for H1–H8; edge goldens; Phase 1–2 properties all still green.
 
-**Done when (Phase 2 gate):**
+**Done when:**
 - [ ] All goldens (H1–H8 complete, E01–E16) pass without editing expectations.
 - [ ] P1–P12 pass at 5,000 runs.
 - [ ] You (the human) read the H1–H8 patient texts in the PR description and approve their tone.
-- [ ] Gate result written in `docs/PROGRESS.md`.
 
-**Out of scope:** OpenAI; verifier; UI.
+**Out of scope:** OpenAI; verifier; UI; range explanations (2.5).
 
 **Starter prompt:**
 ```
 $whynot-session
-Session 2.4 — Template narrator + edge goldens (Phase 2 gate).
+Session 2.4 — Template narrator + edge goldens.
 Read AGENTS.md, docs/PROGRESS.md and docs/sessions/phase-2-engine-complete.md (section "Session 2.4") fully before writing code.
 Also read: docs/04-explanation-and-ai.md (Template wording, Narrator interface), docs/06-testing-and-accuracy.md (Golden scenarios).
 Use skills: whynot-session, whynot-narration, whynot-testing.
 Work on branch session/2.4-templates. Implement exactly the "Build" list; nothing from "Out of scope".
 Write edge goldens from the spec before running the engine on them; never edit expectations to pass.
 Paste the H1–H8 patient and staff texts into the PR description for human review.
+Finish only when every "Done when" item is true and `pnpm verify` is green.
+If anything in the spec is ambiguous or contradictory, stop and write it in docs/QUESTIONS.md instead of guessing.
+End by updating docs/PROGRESS.md and opening a PR with $yeet.
+```
+
+---
+
+## Session 2.5 — Range explanation ("Why is this empty?") → Phase 2 gate
+
+**Goal:** when a whole day, a week, or a practitioner shows no bookable time, the engine explains why in one headline (if there is a common cause) or in a few time segments, and points to the next available slot. This is the most common real moment where hidden slots fail patients (D-006).
+
+**Depends on:** 2.4
+**Read first:** `docs/00-product-brief.md` (Where WhyNot lands), `docs/03-engine-algorithms.md` (Step 8), `docs/04-explanation-and-ai.md` (RangeExplanation, range wording), `docs/02-domain-and-rules.md` (Range hero scenarios H9–H11), `docs/06-testing-and-accuracy.md` (P13, P14).
+**Skills:** `whynot-session`, `whynot-engine`, `whynot-narration`, `whynot-testing`.
+
+**Build:**
+- Contracts: `RangeRequest`, `RangeExplanation` (incl. `context`, `bookableCount`) in `packages/contracts`.
+- `packages/engine/src/range.ts`: `explainRange` exactly per doc 03 Step 8 (slot listing, `isBookable` pass, per-slot evaluation without alternatives using shared per-day indexes, signatures, segment merge, common cause vs. context with the sufficiency check, next available).
+- `projectForAudience` support for `RangeExplanation`.
+- Narrator: range templates (headline, segment line, context line, next available, H9 "ask your GP for a referral" copy) for both audiences; `TemplateNarrator` handles range input.
+- Fixtures: add what H9–H11 need **without moving any booking/leave/maintenance that H1–H8 rely on** (all H1–H8 goldens must still pass unchanged).
+- Golden range scenarios `H9…H11-*.json` (format like single goldens, with `kind: "range"`, `expect.status`, `expect.commonCauseRuleIds`, `expect.segmentRuleIds` in order, `expect.nextAvailable`), written from doc 02 **before** running the engine; golden runner extended for `kind: "range"`.
+- Bench: `explainRange` one day and 7 days on S.
+
+**Tests:** P13, P14 (property); unit: closed day → single segment; `has_availability` when one slot is free; capability facts go to `context` not `commonCause`; segment merge ignores booking-specific detail; next available after range; H9–H11 goldens; all earlier goldens and properties unchanged.
+
+**Done when (Phase 2 gate):**
+- [ ] P1–P14 pass at 5,000 runs.
+- [ ] H1–H11 and E01–E16 goldens pass without editing expectations.
+- [ ] Bench: one day ≤ 300 ms, 7 days ≤ 1.5 s (recorded).
+- [ ] H9–H11 patient texts pasted in the PR for your tone review.
+- [ ] Gate result written in `docs/PROGRESS.md`.
+
+**Out of scope:** API route (3.3), UI (4.2), AI wording.
+
+**Starter prompt:**
+```
+$whynot-session
+Session 2.5 — Range explanation ("Why is this empty?") (Phase 2 gate).
+Read AGENTS.md, docs/PROGRESS.md and docs/sessions/phase-2-engine-complete.md (section "Session 2.5") fully before writing code.
+Also read: docs/00-product-brief.md (Where WhyNot lands), docs/03-engine-algorithms.md (Step 8), docs/04-explanation-and-ai.md (RangeExplanation), docs/02-domain-and-rules.md (H9–H11), docs/06-testing-and-accuracy.md (P13, P14).
+Use skills: whynot-session, whynot-engine, whynot-narration, whynot-testing.
+Work on branch session/2.5-range. Implement exactly the "Build" list; nothing from "Out of scope".
+Write H9–H11 goldens from docs/02 BEFORE running the engine; never edit expectations to pass; do not disturb fixtures used by H1–H8.
 Finish only when every "Done when" item is true and `pnpm verify` is green.
 If anything in the spec is ambiguous or contradictory, stop and write it in docs/QUESTIONS.md instead of guessing.
 End by updating docs/PROGRESS.md (including the Phase 2 gate result) and opening a PR with $yeet.

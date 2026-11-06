@@ -141,6 +141,33 @@ Staff-only answer to "what policy change would have allowed this exact request?"
 
 With `trace: true`, include the candidate list, the full matrix (`V(a)` per candidate), reduced family, search node count and the alternatives evaluated. Used only by the engine inspector page; capped in size.
 
+## Step 8 — Range explanation: "Why is this day (or week) empty?"
+
+The most common real situation is not one blocked slot but **no slots at all** for a day or a practitioner. `explainRange` answers it by reusing Steps 1–5.
+
+```ts
+explainRange(snapshot, req: RangeRequest, opts): RangeExplanation
+RangeRequest = { patientId, serviceId, practitionerId?, fromDate: LocalDate, days: 1..7 }
+```
+
+Algorithm (deterministic):
+
+1. For each date in the range, list every grid start time where the appointment would fit inside clinic opening hours (a closed day yields one `clinic-closed-day` segment directly).
+2. For each slot: `isBookable`. If any slot in the range is bookable → `status: 'has_availability'` with the count (the UI just shows the grid).
+3. Otherwise evaluate each slot **without alternatives** (shared per-day indexes, built once) to get its primary facts.
+4. **Signature** of a slot = sorted set of `(ruleId, subject.id)` pairs of its primary facts (booking-specific details ignored, so "Dr. Rao busy" at 10:00 and 10:15 match).
+5. **Segments:** merge consecutive slots with identical signatures into `{ date, from, to, factIds (union), signature }`.
+6. **Common cause vs. context:** let `I` = the fact pairs present in **every** slot's signature.
+   - If the facts of `I` are **sufficient on their own** for every slot (they hit every candidate's `V(a)` in every slot), `commonCause = I` and it is the headline ("Ultrasound scans need a referral — none of these times can be booked without one"; "Dr. Okafor doesn't work Fridays").
+   - Otherwise `commonCause = []`, and the capability facts in `I` become `context` (e.g. "Only Dr. Rao and Dr. Mehta offer minor procedures") — shown once for the range, not repeated in every segment. This stops facts like "Nurse Iyer isn't qualified" from posing as the reason the day is empty.
+7. **Next available:** the first bookable slot after the range (same service, same practitioner constraint, then any practitioner), searched up to `searchDays` ahead; `null` if none.
+
+Output: `{ status: 'has_availability' | 'fully_blocked', commonCause: FactId[], context: FactId[], segments: Segment[], nextAvailable: Alternative | null, facts }` (segment fact lists exclude `context` facts). Projection and templates apply exactly as for single explanations.
+
+Properties (doc 06): segments cover every candidate slot exactly once and in order; every slot's primary facts are within its segment's facts; every common-cause pair is in every slot's signature and `commonCause` alone blocks every slot; `nextAvailable` re-evaluates bookable.
+
+Performance target: one day ≤ 300 ms, a 7-day practitioner range ≤ 1.5 s (S dataset).
+
 ## Performance plan
 
 | Operation | Target p95 (demo dataset, Node, laptop) | Budget mechanism |
@@ -149,6 +176,7 @@ With `trace: true`, include the candidate list, the full matrix (`V(a)` per cand
 | `evaluate` without alternatives | ≤ 20 ms | Factorised matrix + bitsets |
 | `evaluate` with alternatives | ≤ 400 ms | `budgetEvals`, lazy cost-ordered generation |
 | Availability grid (one service, one day, all slots) | ≤ 100 ms | Repeated `isBookable` with shared per-day indexes |
+| `explainRange` one day / 7 days | ≤ 300 ms / ≤ 1.5 s | Shared per-day indexes; no alternatives per slot |
 
 Benchmarks (`pnpm bench`) run three dataset sizes: **S** (demo clinic), **M** (3× resources, 2× bookings), **L** (10× resources). Targets apply to S; M/L are reported to show scaling. If S misses targets in Phase 1, optimise before building UI.
 

@@ -15,6 +15,8 @@ Format: **ID · Decision** — *Why* — *Rejected alternatives* — *Revisit if
 
 **D-004 · Single clinic, single timezone, single-appointment requests in v1.** Keeps the algorithm exact and fast. Extension notes in doc 03.
 
+**D-006 · Position WhyNot on the three moments where hiding slots fails** (patient stuck on an empty day/practitioner, front-desk calls, invisible lost bookings) — not on the ordinary "pick another open slot" case. Adds range explanations ("Why is this empty?", Session 2.5) as a first-class feature. *Why:* most apps hide unavailable slots; a single-slot explainer alone would solve a rare problem.
+
 **D-005 · The demo creates bookings in its own DB; WhyNot integrates with no third-party scheduler in v1.**
 
 ## Engine

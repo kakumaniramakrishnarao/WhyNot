@@ -101,7 +101,7 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 **Done when (Phase 5 gate):**
 - [ ] Report committed; first-pass ≥ 90%; privacy failures = 0.
 - [ ] D-046 recorded; `.env.example` default model updated.
-- [ ] Static demo shows "AI wording — verified" for H1–H8.
+- [ ] Static demo shows "AI wording — verified" for H1–H11.
 - [ ] Gate result written in `docs/PROGRESS.md`.
 
 **Out of scope:** new verifier checks unless a real failure mode is found (then add with a test).

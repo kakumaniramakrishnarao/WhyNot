@@ -106,3 +106,11 @@ Unless a scenario says otherwise, `now` = Monday of the demo week, 09:00 clinic 
 | H6 | Wound dressing Tue 11:00 (Nurse Iyer is free) | Both rooms equipped for dressings are unavailable: Treatment Room under maintenance *and* Consult 3 in use — two different reasons that only block together | Tue 11:30 (Consult 3 free again) |
 | H7 | GP consultation with Dr. Okafor Wed 09:00 (patient asked for her) | Dr. Okafor starts at 10:00; patient asked for her specifically | Wed 10:00 Dr. Okafor (cost 4) first; Wed 09:00 with Dr. Rao (cost 8) as the other-practitioner alternative — shows the preference trade-off |
 | H8 | Blood test, patient already booked that day | You already have an appointment that day (limit 1) | Next day same time |
+
+### Range hero scenarios ("Why is this empty?")
+
+| # | Request | Expected range explanation | Expected next available |
+| --- | --- | --- | --- |
+| H9 | Ultrasound, Mon–Fri of demo week, patient **without** referral | `fully_blocked`; common cause = referral required (headline); no per-time noise | `null` — UI copy: "Ask your GP for a referral" |
+| H10 | GP consultation with Dr. Okafor, Friday | `fully_blocked`; common cause = Dr. Okafor doesn't work Fridays | Mon 10:00 Dr. Okafor (first slot of her next working day) |
+| H11 | Minor procedure, Tuesday, `now` = Tue 08:30 | `fully_blocked`; no common cause; context = only Dr. Rao and Dr. Mehta offer minor procedures; segments: until 10:30 · 2 hours' notice → mid-day · Dr. Rao fully booked + Dr. Mehta on leave → after 16:00 · Dr. Rao not working (fixture places Rao's bookings to make this exact) | Wed, first free slot with Dr. Rao or Dr. Mehta |

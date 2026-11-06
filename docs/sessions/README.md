@@ -6,7 +6,7 @@ Each card is one Codex session: a self-contained, verified, pushed increment.
 | --- | --- |
 | [phase-0-foundation.md](phase-0-foundation.md) | 0.1 – 0.2 |
 | [phase-1-engine-core.md](phase-1-engine-core.md) | 1.1 – 1.6 |
-| [phase-2-engine-complete.md](phase-2-engine-complete.md) | 2.1 – 2.4 |
+| [phase-2-engine-complete.md](phase-2-engine-complete.md) | 2.1 – 2.5 |
 | [phase-3-api-data.md](phase-3-api-data.md) | 3.1 – 3.4 |
 | [phase-4-patient-ui.md](phase-4-patient-ui.md) | 4.1 – 4.5 |
 | [phase-5-ai-narration.md](phase-5-ai-narration.md) | 5.1 – 5.3 |

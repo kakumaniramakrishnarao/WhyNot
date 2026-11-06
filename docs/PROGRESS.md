@@ -15,7 +15,8 @@ Live checklist. Each session ticks its row and appends a hand-off note below. Ga
 | [ ] | 2.1 | Alternatives search | | |
 | [ ] | 2.2 | Admin fix, groups, final evaluate() | | |
 | [ ] | 2.3 | Audience projection | | |
-| [ ] | 2.4 | Template narrator + edge goldens — Phase 2 gate | | |
+| [ ] | 2.4 | Template narrator + edge goldens | | |
+| [ ] | 2.5 | Range explanation ("Why is this empty?") — Phase 2 gate | | |
 | [ ] | 3.1 | DB schema, migrations, PGlite, Compose | | |
 | [ ] | 3.2 | Seed, demo clock, history | | |
 | [ ] | 3.3 | API read routes | | |
@@ -59,5 +60,5 @@ Live checklist. Each session ticks its row and appends a hand-off note below. Ga
 -->
 
 ### Planning (2026-11-06)
-- Built: complete plan — product brief, architecture, rule catalog, algorithms, AI/verifier design, API/data, testing, roadmap, decisions, Codex workflow, AGENTS.md, project skills, 31 session cards.
+- Built: complete plan — product brief, architecture, rule catalog, algorithms, AI/verifier design, API/data, testing, roadmap, decisions, Codex workflow, AGENTS.md, project skills, 32 session cards (Session 2.5 "Why is this empty?" added after positioning review, D-006).
 - Next session should know: start with Session 0.1. Install the curated skills listed in docs/09-codex-workflow.md first.

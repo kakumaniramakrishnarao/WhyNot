@@ -8,7 +8,7 @@ Exit gate (checked in Session 3.4): API integration suite green on PGlite (and `
 
 **Goal:** the database exists with migrations, can be spun up in-process for tests, and in Docker for local dev.
 
-**Depends on:** 2.4
+**Depends on:** 2.5
 **Read first:** `docs/05-api-and-data.md` (Database schema, Test database), `docs/08-decisions.md` (D-031, D-032, D-034, Q-2).
 **Skills:** `whynot-session`, `whynot-api`, `whynot-testing`.
 
@@ -54,7 +54,7 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 
 **Build:**
 - `apps/api/src/seed/index.ts` (`pnpm db:seed`): truncates + inserts from `@whynot/fixtures` clinic builder (single source of truth — no duplicated data), active policy v1.
-- Historical evaluations: generate ~1,500 requests over the 14 days before `DEMO_DATE` from a seeded generator, run the engine on each (against the snapshot as of that time), insert into `evaluations`. Deterministic.
+- Historical evaluations: generate ~1,500 requests (single-slot and some range requests) over the 14 days before `DEMO_DATE` from a seeded generator, run the engine on each (against the snapshot as of that time), insert into `evaluations`. Deterministic.
 - `apps/api/src/clock.ts`: `getNow()` per doc 05 (`DEMO_NOW` frozen, else `DEMO_DATE` + real time-of-day); env documented in `.env.example`.
 - `apps/api/src/snapshotLoader.ts`: `loadSnapshot(db, { from, to })` → contract-validated `ClinicSnapshot` (historical mode: `asOf` filters bookings by `created_at`/`cancelled_at`).
 
@@ -82,7 +82,7 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 
 ---
 
-## Session 3.3 — API skeleton, `/clinic`, `/availability`, `/explain`
+## Session 3.3 — API skeleton, `/clinic`, `/availability`, `/explain`, `/explain-range`
 
 **Goal:** the read side of the API works end to end with validation, audience projection and evaluation logging.
 
@@ -91,13 +91,13 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 **Skills:** `whynot-session`, `whynot-api`, `whynot-testing`, `security-threat-model` (draft only).
 
 **Build:**
-- `packages/contracts/src/api.ts`: request/response schemas for `health`, `clinic`, `availability`, `explain`, and the error envelope.
+- `packages/contracts/src/api.ts`: request/response schemas for `health`, `clinic`, `availability`, `explain`, `explain-range`, and the error envelope.
 - `apps/api/src/app.ts`: `buildApp({ db, clock, config })` — Fastify with zod type provider, error handler, request logging (no PII), body limit, CORS, rate-limit plugin.
-- Routes: `GET /api/health`, `GET /api/clinic`, `GET /api/availability`, `POST /api/explain` (stores staff-level evaluation, returns projected + `evaluationId`).
+- Routes: `GET /api/health`, `GET /api/clinic`, `GET /api/availability`, `POST /api/explain` (stores staff-level evaluation, returns projected + `evaluationId`), `POST /api/explain-range` (projected `RangeExplanation`; stores one evaluation row per range with `outcome = fully_blocked|has_availability` and the common-cause/segment rule IDs in `primary_rule_ids`).
 - `apps/api/src/demoRole.ts`: header parsing + guards.
 - `docs/security/threat-model.md`: first draft using `security-threat-model` (assets, trust boundaries, abuse cases) — to be finalised in 7.1.
 
-**Tests:** each route (success, validation error, unknown id); patient vs staff projection on H1; availability grid matches `isBookable` for every slot of a day; **H1–H8 through `/api/explain` match engine goldens** (outcome + primary rule IDs).
+**Tests:** each route (success, validation error, unknown id); patient vs staff projection on H1; availability grid matches `isBookable` for every slot of a day; **H1–H8 through `/api/explain` and H9–H11 through `/api/explain-range` match engine goldens**.
 
 **Done when:**
 - [ ] All listed tests pass; response bodies parse against contract schemas.
@@ -109,7 +109,7 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 **Starter prompt:**
 ```
 $whynot-session
-Session 3.3 — API skeleton, /clinic, /availability, /explain.
+Session 3.3 — API skeleton, /clinic, /availability, /explain, /explain-range.
 Read AGENTS.md, docs/PROGRESS.md and docs/sessions/phase-3-api-data.md (section "Session 3.3") fully before writing code.
 Also read: docs/05-api-and-data.md, docs/04-explanation-and-ai.md (Audience projection).
 Use skills: whynot-session, whynot-api, whynot-testing, security-threat-model.

@@ -1,6 +1,6 @@
 # Phase 4 — Patient experience (the demo)
 
-Exit gate (checked in Session 4.5): Playwright e2e for H1, H2, H3, H7 pass in **full** and **static** mode; axe reports no serious/critical issues; desktop + mobile screenshots approved by you; static build deploys to GitHub Pages.
+Exit gate (checked in Session 4.5): Playwright e2e for H1, H2, H3, H7, H9, H10 pass in **full** and **static** mode; axe reports no serious/critical issues; desktop + mobile screenshots approved by you; static build deploys to GitHub Pages.
 
 Design quality matters here — this is what reviewers see first. Use `ui-ux-pro-max` throughout.
 
@@ -47,9 +47,9 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet (attach screenshots
 
 ---
 
-## Session 4.2 — Booking page + availability grid
+## Session 4.2 — Booking page + availability grid + "Why is this empty?"
 
-**Goal:** a patient can choose a service, optionally a practitioner, and a day, and see a clear grid of bookable and unavailable times.
+**Goal:** a patient can choose a service, optionally a practitioner, and a day, and see a clear grid of bookable and unavailable times — and when a day (or a requested practitioner's week) has **no** bookable time, the page explains why instead of showing an empty grid.
 
 **Depends on:** 4.1
 **Read first:** `docs/05-api-and-data.md` (`/clinic`, `/availability`), `docs/design/design-system.md`.
@@ -58,13 +58,15 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet (attach screenshots
 **Build:**
 - `src/pages/Booking.tsx`: step layout (Service → Practitioner "Any" default → Day picker over the demo fortnight → time grid).
 - `src/components/AvailabilityGrid.tsx`: slots as buttons; bookable vs unavailable styled with icon + text (not colour only); accessible names per `$whynot-ui`; unavailable slots are clickable ("See why").
-- Loading / empty ("No sessions offered this day") / error states.
+- Loading and error states.
+- **Empty state = range explanation** (`POST /api/explain-range`): when `fully_blocked`, replace the grid with `src/components/WhyEmptyCard.tsx` — headline (common cause) or segment list, context line, and a prominent "Next available: Mon 10:00 with Dr. Okafor" button that jumps the grid to that day. When a practitioner is selected, offer "Why no times this week?" (7-day range). Copy for H9 ("Ask your GP for a referral").
 - URL state (`?service=&practitioner=&date=`) so scenarios are linkable.
 
-**Tests:** component tests for grid accessibility names and keyboard navigation; e2e smoke (page loads, grid renders for H1 day).
+**Tests:** component tests for grid accessibility names and keyboard navigation, and for WhyEmptyCard (headline vs. segments); e2e: H1 day grid renders; **H9** (no referral → referral headline) and **H10** (Okafor Friday → "doesn't work Fridays" → next available jumps to Monday).
 
 **Done when:**
 - [ ] Grid matches `/availability` for H1's day (e2e assertion).
+- [ ] H9 and H10 e2e green.
 - [ ] Keyboard-only flow works; screenshots in PR.
 - [ ] `pnpm verify` green.
 
@@ -73,10 +75,10 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet (attach screenshots
 **Starter prompt:**
 ```
 $whynot-session
-Session 4.2 — Booking page + availability grid.
+Session 4.2 — Booking page + availability grid + "Why is this empty?".
 Read AGENTS.md, docs/PROGRESS.md and docs/sessions/phase-4-patient-ui.md (section "Session 4.2") fully before writing code.
-Also read: docs/05-api-and-data.md, docs/design/design-system.md.
-Use skills: whynot-session, whynot-ui, ui-ux-pro-max.
+Also read: docs/05-api-and-data.md, docs/00-product-brief.md (Where WhyNot lands), docs/04-explanation-and-ai.md (range wording), docs/design/design-system.md.
+Use skills: whynot-session, whynot-ui, ui-ux-pro-max, playwright.
 Work on branch session/4.2-booking-page. Implement exactly the "Build" list; nothing from "Out of scope".
 Finish only when every "Done when" item is true and `pnpm verify` is green.
 If anything in the spec is ambiguous or contradictory, stop and write it in docs/QUESTIONS.md instead of guessing.
@@ -172,13 +174,13 @@ End by updating docs/PROGRESS.md and opening a PR with $yeet.
 
 **Build:**
 - Wire `pnpm test:e2e` for real (full mode starts API on PGlite + `DEMO_NOW`; static mode uses preview build); add e2e job to CI.
-- Add H2 full-mode and H1/H3/H7 static-mode specs; axe check on every page.
+- Add H2 full-mode and H1/H3/H7/H9/H10 static-mode specs (static adapter must support `explainRange`); axe check on every page.
 - Fix everything from the `ui-ux-pro-max` pre-delivery checklist (contrast, focus states, hit targets ≥ 44 px, responsive at 360/390/768/1280 px, reduced-motion).
 - Explore the app with `playwright-interactive` for broken states; fix them.
 - Screenshots of key screens saved in `docs/design/screens/`.
 
 **Done when (Phase 4 gate):**
-- [ ] E2E H1, H2, H3, H7 green in both modes in CI.
+- [ ] E2E H1, H2, H3, H7, H9, H10 green in both modes in CI.
 - [ ] axe: 0 serious/critical.
 - [ ] You review the screenshots and approve.
 - [ ] Gate result written in `docs/PROGRESS.md`.

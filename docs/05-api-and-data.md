@@ -15,6 +15,7 @@
 | `GET /api/clinic` | Public clinic info: services, practitioners (public fields), opening hours, demo clock | |
 | `GET /api/availability?serviceId&date&practitionerId?` | Slot grid for a day: `[{ start, bookable }]` | Uses `isBookable` per grid slot; cached per (policyVersion, date, service, practitioner, bookingsVersion) |
 | `POST /api/explain` | Body `{ serviceId, start, practitionerId? }` (+ patient from header) → projected `Evaluation` + `evaluationId` | Stores staff-level evaluation in `evaluations` |
+| `POST /api/explain-range` | Body `{ serviceId, fromDate, days (1–7), practitionerId? }` → projected `RangeExplanation` | Used by the empty-day / empty-week state; rate limited |
 | `POST /api/narrate` | Body `{ evaluationId }` → `Narration` for caller's audience | Template if AI disabled/over budget/verification fails |
 | `POST /api/bookings` | Body `{ serviceId, start, practitionerId? }` → booking or 409 with fresh explanation | Re-evaluates inside a transaction (see below) |
 | `DELETE /api/bookings/:id` | Cancel own booking (patient) or any (staff) | Demo convenience |

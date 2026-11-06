@@ -8,6 +8,7 @@ Every booking system says "slot unavailable" and stops there. WhyNot answers the
 
 - **Why not?** The *minimal set of rules* that together block the request — including rules that only block in combination ("Dr. Rao has a 15-minute buffer after her 2:30 procedure, and Dr. Mehta — the only other practitioner qualified for this — is on leave").
 - **What would work?** The nearest valid alternatives, computed and re-verified by the engine ("2:45 with Dr. Rao", "3:00 with Dr. Mehta tomorrow").
+- **Why is this whole day empty?** Most apps just hide unavailable times — fine until a patient finds *nothing* for the day, the week, or their doctor. WhyNot explains the empty screen ("Ultrasound scans need a referral", "Dr. Okafor doesn't work Fridays — next: Monday 10:00").
 - **What is this costing us?** For clinic staff: which rules block the most requests, and what would happen if a policy changed.
 
 The decision is always made by a **deterministic rules engine**. An AI model (OpenAI) only rewords the engine's structured result into friendly language — and a verifier rejects any sentence that doesn't cite a real reason. With no API key, WhyNot uses built-in templates, so the demo runs at zero cost.

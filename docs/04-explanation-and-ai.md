@@ -29,7 +29,13 @@ Alternative = { request: BookingRequest, assignment: Assignment, category: 'same
                 cost: number, changes: { field: 'start' | 'practitioner' | 'date', from: string, to: string }[] }
 
 AdminFix = { factIds: FactId[], changes: { setting: string, from: string | number, to: string | number }[], viaCandidate: Assignment }
+
+RangeExplanation = { status: 'has_availability' | 'fully_blocked', bookableCount: number,
+                     commonCause: FactId[], context: FactId[], segments: { date: LocalDate, from: LocalTime, to: LocalTime, factIds: FactId[] }[],
+                     nextAvailable: Alternative | null, facts: Record<FactId, Fact> }
 ```
+
+Range wording: a headline from the common cause (if any), then one line per segment ("09:00–11:00 · bookings need 2 hours' notice", "11:00–16:00 · Dr. Rao is fully booked", "after 16:00 · Dr. Rao isn't working"), then "Next available: …". Same templates, same projection, same verifier.
 
 The contract is versioned (`EXPLANATION_SCHEMA_VERSION = 1`). Any breaking change bumps it and gets a decision-log entry.
 
